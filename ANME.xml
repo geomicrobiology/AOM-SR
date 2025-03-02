@@ -1,0 +1,4808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by COPASI version 4.44 (Build 295) on 2025-03-01 19:24 with libSBML version 5.20.0. -->
+<sbml xmlns="http://www.sbml.org/sbml/level2/version4" level="2" version="4">
+  <model metaid="COPASI0" id="ANME" name="ANME">
+    <notes>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+        <pre>This COPASI model was initially developed by Zena Jensvold and later refined by Gordon Bowman and Qusheng Jin. It aims to simulate the energy metabolism of anaerobic methanotrophic archaea (ANME) based on enzyme kinetics and thermodynamics. The model integrates the kinetics and thermodynamics of enzyme reactions to provide a mechanistic understanding of ANME bioenergetics in anaerobic environments.</pre>
+      </body>
+    </notes>
+    <annotation>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+        <rdf:Description rdf:about="#COPASI0">
+          <dcterms:created rdf:parseType="Resource">
+            <dcterms:W3CDTF>2015-10-26T12:52:54Z</dcterms:W3CDTF>
+          </dcterms:created>
+          <dcterms:modified rdf:parseType="Resource">
+            <dcterms:W3CDTF>2015-10-26T12:52:54Z</dcterms:W3CDTF>
+          </dcterms:modified>
+        </rdf:Description>
+      </rdf:RDF>
+      <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+        <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about="#COPASI0">
+            <dcterms:created>
+              <rdf:Description>
+                <dcterms:W3CDTF>2015-10-26T12:52:54Z</dcterms:W3CDTF>
+              </rdf:Description>
+            </dcterms:created>
+          </rdf:Description>
+        </rdf:RDF>
+      </copasi:COPASI>
+    </annotation>
+    <listOfFunctionDefinitions>
+      <functionDefinition id="MAX">
+        <annotation>
+          <function xmlns="http://sbml.org/annotations/function" definition="http://sbml.org/annotations/function/max"/>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> a </ci>
+            </bvar>
+            <bvar>
+              <ci> b </ci>
+            </bvar>
+            <piecewise>
+              <piece>
+                <ci> a </ci>
+                <apply>
+                  <geq/>
+                  <ci> a </ci>
+                  <ci> b </ci>
+                </apply>
+              </piece>
+              <otherwise>
+                <ci> b </ci>
+              </otherwise>
+            </piecewise>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI96" id="J_diff" name="J_diff">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI96">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T01:46:17Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Diff </ci>
+            </bvar>
+            <bvar>
+              <ci> r_cell </ci>
+            </bvar>
+            <bvar>
+              <ci> V_cyto </ci>
+            </bvar>
+            <bvar>
+              <ci> Se </ci>
+            </bvar>
+            <bvar>
+              <ci> Sc </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <apply>
+                  <times/>
+                  <cn> 4 </cn>
+                  <pi/>
+                  <ci> Diff </ci>
+                  <ci> r_cell </ci>
+                </apply>
+                <ci> V_cyto </ci>
+              </apply>
+              <apply>
+                <minus/>
+                <ci> Se </ci>
+                <ci> Sc </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI97" id="V_Mtd" name="V_Mtd">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI97">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T13:25:32Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> K1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> K2 </ci>
+            </bvar>
+            <bvar>
+              <ci> F_RTk </ci>
+            </bvar>
+            <bvar>
+              <ci> Ea </ci>
+            </bvar>
+            <bvar>
+              <ci> Ed </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> S1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S1 </ci>
+                  <ci> K1 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <ci> S2 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S2 </ci>
+                  <ci> K2 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <exp/>
+                  <apply>
+                    <times/>
+                    <apply>
+                      <minus/>
+                      <ci> F_RTk </ci>
+                    </apply>
+                    <apply>
+                      <minus/>
+                      <ci> Ea </ci>
+                      <ci> Ed </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI98" id="V_Fmd" name="V_Fmd">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI98">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T14:13:39Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> K1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> K2 </ci>
+            </bvar>
+            <bvar>
+              <ci> F_RTk </ci>
+            </bvar>
+            <bvar>
+              <ci> Ea </ci>
+            </bvar>
+            <bvar>
+              <ci> Ed </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> S1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S1 </ci>
+                  <ci> K1 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <ci> S2 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S2 </ci>
+                  <ci> K2 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <exp/>
+                  <apply>
+                    <times/>
+                    <apply>
+                      <minus/>
+                      <ci> F_RTk </ci>
+                    </apply>
+                    <apply>
+                      <minus/>
+                      <ci> Ea </ci>
+                      <ci> Ed </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI99" id="V_Ftr" name="V_Ftr">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI99">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T13:25:32Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> K1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> K2 </ci>
+            </bvar>
+            <bvar>
+              <ci> log10_QoverK </ci>
+            </bvar>
+            <bvar>
+              <ci> chi </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> S1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S1 </ci>
+                  <ci> K1 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <ci> S2 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S2 </ci>
+                  <ci> K2 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <power/>
+                  <cn> 10 </cn>
+                  <apply>
+                    <divide/>
+                    <ci> log10_QoverK </ci>
+                    <ci> chi </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI100" id="V_Mtr" name="V_Mtr">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI100">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T17:00:00Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> K1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> K2 </ci>
+            </bvar>
+            <bvar>
+              <ci> log10_QoverK </ci>
+            </bvar>
+            <bvar>
+              <ci> F_RTk </ci>
+            </bvar>
+            <bvar>
+              <ci> delta_phi </ci>
+            </bvar>
+            <bvar>
+              <ci> m </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> S1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S1 </ci>
+                  <ci> K1 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <ci> S2 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S2 </ci>
+                  <ci> K2 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <apply>
+                    <power/>
+                    <cn> 10 </cn>
+                    <apply>
+                      <divide/>
+                      <ci> log10_QoverK </ci>
+                      <apply>
+                        <ci> MAX </ci>
+                        <cn> 2 </cn>
+                        <ci> m </ci>
+                      </apply>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <exp/>
+                    <apply>
+                      <divide/>
+                      <apply>
+                        <times/>
+                        <ci> F_RTk </ci>
+                        <ci> m </ci>
+                        <ci> delta_phi </ci>
+                      </apply>
+                      <apply>
+                        <ci> MAX </ci>
+                        <cn> 2 </cn>
+                        <ci> m </ci>
+                      </apply>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI101" id="V_Mer" name="V_Mer">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI101">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T13:46:46Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> KS1 </ci>
+            </bvar>
+            <bvar>
+              <ci> P1 </ci>
+            </bvar>
+            <bvar>
+              <ci> KP1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> KS2 </ci>
+            </bvar>
+            <bvar>
+              <ci> P2 </ci>
+            </bvar>
+            <bvar>
+              <ci> KP2 </ci>
+            </bvar>
+            <bvar>
+              <ci> F_RTk </ci>
+            </bvar>
+            <bvar>
+              <ci> Ea </ci>
+            </bvar>
+            <bvar>
+              <ci> Ed </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <apply>
+                  <divide/>
+                  <ci> S1 </ci>
+                  <ci> KS1 </ci>
+                </apply>
+                <apply>
+                  <plus/>
+                  <cn> 1 </cn>
+                  <apply>
+                    <divide/>
+                    <ci> S1 </ci>
+                    <ci> KS1 </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> P1 </ci>
+                    <ci> KP1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <apply>
+                  <divide/>
+                  <ci> S2 </ci>
+                  <ci> KS2 </ci>
+                </apply>
+                <apply>
+                  <plus/>
+                  <cn> 1 </cn>
+                  <apply>
+                    <divide/>
+                    <ci> S2 </ci>
+                    <ci> KS2 </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> P2 </ci>
+                    <ci> KP2 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <exp/>
+                  <apply>
+                    <times/>
+                    <apply>
+                      <minus/>
+                      <ci> F_RTk </ci>
+                    </apply>
+                    <apply>
+                      <minus/>
+                      <ci> Ea </ci>
+                      <ci> Ed </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI102" id="V_Mcr" name="V_Mcr">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI102">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T13:25:32Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> K1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> K2 </ci>
+            </bvar>
+            <bvar>
+              <ci> F_RTk </ci>
+            </bvar>
+            <bvar>
+              <ci> Ea </ci>
+            </bvar>
+            <bvar>
+              <ci> Ed </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> S1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S1 </ci>
+                  <ci> K1 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <ci> S2 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S2 </ci>
+                  <ci> K2 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <exp/>
+                  <apply>
+                    <times/>
+                    <apply>
+                      <minus/>
+                      <ci> F_RTk </ci>
+                    </apply>
+                    <apply>
+                      <minus/>
+                      <ci> Ea </ci>
+                      <ci> Ed </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI103" id="V_redox" name="V_redox">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI103">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T17:00:00Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protin </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> K1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> K2 </ci>
+            </bvar>
+            <bvar>
+              <ci> F_RTk </ci>
+            </bvar>
+            <bvar>
+              <ci> n </ci>
+            </bvar>
+            <bvar>
+              <ci> Ea </ci>
+            </bvar>
+            <bvar>
+              <ci> Ed </ci>
+            </bvar>
+            <bvar>
+              <ci> m </ci>
+            </bvar>
+            <bvar>
+              <ci> delta_phi </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protin </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> S1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S1 </ci>
+                  <ci> K1 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <ci> S2 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S2 </ci>
+                  <ci> K2 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <exp/>
+                  <apply>
+                    <divide/>
+                    <apply>
+                      <times/>
+                      <apply>
+                        <minus/>
+                        <ci> F_RTk </ci>
+                      </apply>
+                      <apply>
+                        <minus/>
+                        <apply>
+                          <times/>
+                          <ci> n </ci>
+                          <apply>
+                            <minus/>
+                            <ci> Ea </ci>
+                            <ci> Ed </ci>
+                          </apply>
+                        </apply>
+                        <apply>
+                          <times/>
+                          <ci> m </ci>
+                          <ci> delta_phi </ci>
+                        </apply>
+                      </apply>
+                    </apply>
+                    <apply>
+                      <ci> MAX </ci>
+                      <ci> n </ci>
+                      <ci> m </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI104" id="V_GerN" name="V_GerN">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI104">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:03:03Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> na_m </ci>
+            </bvar>
+            <bvar>
+              <ci> h_m </ci>
+            </bvar>
+            <bvar>
+              <ci> nac </ci>
+            </bvar>
+            <bvar>
+              <ci> hc </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> na_m </ci>
+                <apply>
+                  <plus/>
+                  <ci> h_m </ci>
+                  <ci> na_m </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> nac </ci>
+                    <ci> h_m </ci>
+                  </apply>
+                  <apply>
+                    <times/>
+                    <ci> hc </ci>
+                    <ci> na_m </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI105" id="V_Aha" name="V_Aha">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI105">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T15:12:11Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> K1 </ci>
+            </bvar>
+            <bvar>
+              <ci> K2 </ci>
+            </bvar>
+            <bvar>
+              <ci> chi </ci>
+            </bvar>
+            <bvar>
+              <ci> delta_phi </ci>
+            </bvar>
+            <bvar>
+              <ci> log10_QoverK </ci>
+            </bvar>
+            <bvar>
+              <ci> F_RTk </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> S1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S1 </ci>
+                  <ci> K1 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <ci> S2 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S2 </ci>
+                  <ci> K2 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <apply>
+                    <power/>
+                    <cn> 10 </cn>
+                    <apply>
+                      <divide/>
+                      <ci> log10_QoverK </ci>
+                      <ci> chi </ci>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <exp/>
+                    <apply>
+                      <times/>
+                      <apply>
+                        <minus/>
+                        <ci> F_RTk </ci>
+                      </apply>
+                      <ci> delta_phi </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI106" id="V_Mch" name="V_Mch">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI106">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T13:54:22Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rho_protein </ci>
+            </bvar>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> phi_E </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> K1 </ci>
+            </bvar>
+            <bvar>
+              <ci> log10_QoverK </ci>
+            </bvar>
+            <bvar>
+              <ci> chi </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> S1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> S1 </ci>
+                  <ci> K1 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <minus/>
+                <cn> 1 </cn>
+                <apply>
+                  <power/>
+                  <cn> 10 </cn>
+                  <apply>
+                    <divide/>
+                    <ci> log10_QoverK </ci>
+                    <ci> chi </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+    </listOfFunctionDefinitions>
+    <listOfUnitDefinitions>
+      <unitDefinition id="length" name="length">
+        <listOfUnits>
+          <unit kind="metre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="area" name="area">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="volume" name="volume">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="time" name="time">
+        <listOfUnits>
+          <unit kind="second" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="substance" name="substance">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_0" name="1/V">
+        <listOfUnits>
+          <unit kind="volt" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_1" name="mol/l">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="litre" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_2" name="m">
+        <listOfUnits>
+          <unit kind="metre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_3" name="meter^3">
+        <listOfUnits>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_4" name="gram/liter">
+        <listOfUnits>
+          <unit kind="litre" exponent="-1" scale="0" multiplier="1"/>
+          <unit kind="gram" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_5" name="V">
+        <listOfUnits>
+          <unit kind="volt" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_6" name="liter">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_7" name="1/d">
+        <listOfUnits>
+          <unit kind="second" exponent="-1" scale="0" multiplier="86400"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_8" name="K">
+        <listOfUnits>
+          <unit kind="kelvin" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_9" name="1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="0" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="unit_10" name="mol/g/d">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="86400"/>
+          <unit kind="gram" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment metaid="COPASI1" id="Cytoplasm" name="Cytoplasm" spatialDimensions="3" size="1" constant="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>The volume is set to 1 liter</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI1">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:00:19Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </compartment>
+      <compartment metaid="COPASI2" id="Membrane" name="Membrane" spatialDimensions="3" size="0.06" constant="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>V_mem = S_mem * mem_thickness
+S_mem = 4*PI*r^2
+mem_thickness = 5e-9 m
+r = 1e-6 m</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI2">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T14:07:20Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species metaid="COPASI3" id="f420" name="f420" compartment="Cytoplasm" initialAmount="0.00053" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI3">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:49:41Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI4" id="f420h2" name="f420h2" compartment="Cytoplasm" initialAmount="0.00053" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI4">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:50:03Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI5" id="fdox" name="fdox" compartment="Cytoplasm" initialAmount="7e-05" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI5">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:50:09Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI6" id="fdred" name="fdred" compartment="Cytoplasm" initialAmount="7e-05" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI6">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:51:05Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI7" id="formmfr" name="formmfr" compartment="Cytoplasm" initialAmount="0.00655" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI7">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:52:36Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI8" id="hco3" name="hco3" compartment="Cytoplasm" initialAmount="0.01" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI8">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:47:30Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI9" id="mfr" name="mfr" compartment="Cytoplasm" initialAmount="0.00655" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI9">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:53:06Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI10" id="formh4mpt" name="formh4mpt" compartment="Cytoplasm" initialAmount="0.0038842" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI10">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:51:17Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI11" id="h4mpt" name="h4mpt" compartment="Cytoplasm" initialAmount="0.0038842" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI11">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:51:47Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI12" id="menylh4mpt" name="menylh4mpt" compartment="Cytoplasm" initialAmount="0.0038842" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI12">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:51:54Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI13" id="mleneh4mpt" name="mleneh4mpt" compartment="Cytoplasm" initialAmount="0.0038842" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI13">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:52:11Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI14" id="mh4mpt" name="mh4mpt" compartment="Cytoplasm" initialAmount="0.0038842" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI14">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:52:07Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI15" id="ch4" name="ch4" compartment="Cytoplasm" initialAmount="0.01" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI15">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:46:41Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI16" id="cob" name="cob" compartment="Cytoplasm" initialAmount="0.00083" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI16">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:47:20Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI17" id="hsfd" name="hsfd" compartment="Cytoplasm" initialAmount="0.00083" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI17">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:53:44Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI18" id="mcom" name="mcom" compartment="Cytoplasm" initialAmount="0.004495" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI18">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:54:22Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI19" id="com" name="com" compartment="Cytoplasm" initialAmount="0.004495" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI19">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:49:24Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI20" id="adp" name="adp" compartment="Cytoplasm" initialAmount="0.001" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI20">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:52:29Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI21" id="atp" name="atp" compartment="Cytoplasm" initialAmount="0.01" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI21">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:52:56Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI22" id="pi" name="pi" compartment="Cytoplasm" initialAmount="0.01" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI22">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:53:09Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI23" id="mphen" name="mphen" compartment="Membrane" initialAmount="7.98802776920089e-06" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI23">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:30:52Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI24" id="mphenh2" name="mphenh2" compartment="Membrane" initialAmount="0.0020020119722308" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI24">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:30:56Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI25" id="naout" name="naout" compartment="Membrane" initialAmount="0.000227671397490185" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI25">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-29T16:43:13Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI26" id="hout" name="hout" compartment="Membrane" initialAmount="4.5534279498037e-10" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI26">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T14:54:14Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI27" id="hco3_env" name="hco3_env" compartment="Cytoplasm" initialAmount="0.01" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI27">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T15:26:57Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI28" id="ch4_env" name="ch4_env" compartment="Cytoplasm" initialAmount="0.01" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI28">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T15:31:44Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI29" id="hc" name="hc" compartment="Cytoplasm" initialAmount="1e-07" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI29">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T00:40:49Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI30" id="nac" name="nac" compartment="Cytoplasm" initialAmount="0.05" hasOnlySubstanceUnits="true" boundaryCondition="true" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI30">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T00:40:49Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </species>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter metaid="COPASI31" id="F_RTk" name="F_RTk" value="38.9214355283121" units="unit_0" constant="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>unit is 1/volt</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI31">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-30T15:57:10Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI32" id="molal_V" name="molal_V" value="48.2425" constant="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>Function: to convert charge in mol/l to Vol
+
+delta_phi = m_charge (mol/l) * molal_V</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI32">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-30T15:57:47Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI33" id="T_fd" name="T_fd" value="0.00014" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI33">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:17:35Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI34" id="T_mpt" name="T_mpt" value="0.019421" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI34">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:18:49Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI35" id="T_mphen" name="T_mphen" value="0.0335" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI35">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:19:24Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI36" id="T_com" name="T_com" value="0.00899" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI36">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:19:59Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI37" id="T_cob" name="T_cob" value="0.00166" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI37">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:21:13Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI38" id="T_mfr" name="T_mfr" value="0.0131" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI38">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:21:28Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI39" id="T_f420" name="T_f420" value="0.00106" units="unit_1" constant="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>0.00058 mol/l</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI39">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:21:46Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI40" id="Co_atp" name="Co_atp" value="0.01" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI40">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:24:15Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI41" id="Co_adp" name="Co_adp" value="0.001" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI41">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:24:03Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI42" id="Co_pi" name="Co_pi" value="0.01" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI42">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-05-24T21:24:21Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI43" id="r_cell" name="r_cell" value="2.5e-07" units="unit_2" constant="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>unit in m</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI43">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T15:52:45Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI44" id="V_cyto" name="V_cyto" value="6.54498469497873e-20" units="unit_3" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI44">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-06T15:53:07Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI45" id="Co_ch4" name="Co_ch4" value="0.01" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI45">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-07T12:11:16Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI46" id="Co_hco3" name="Co_hco3" value="0.01" units="unit_1" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI46">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2019-10-07T12:12:17Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI47" id="rho_protein" name="rho_protein" value="152.46" units="unit_4" constant="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>calculated from the dry weight density of 0.242 g/cm^3 and that proteins account for 0.63 of dry weight</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI47">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T04:42:47Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI48" id="delta_phi" name="delta_phi" value="0.183057656004917" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI48">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T04:55:37Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI49" id="V_mem" name="V_mem" value="3.92699081698724e-18" units="unit_6" constant="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>Membrane volume
+4*PI*r_cell^2*membrane_thickness
+unit in liter</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI49">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T04:57:03Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI50" id="Growth_rate" name="Growth_rate" value="0.0261717893961949" units="unit_7" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI50">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T17:12:31Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI51" id="Tk" name="Tk" value="298.15" units="unit_8" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI51">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T19:02:16Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI52" id="phi_Cyto" name="phi_Cyto" value="0.19834968" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI52">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T20:12:33Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI53" id="phi_Mem" name="phi_Mem" value="0.07801766" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI53">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T20:16:21Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI54" id="phi_CytoN0Mcr" name="phi_CytoN0Mcr" value="0.07834968" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI54">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T23:49:06Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI55" id="Rate_ch4" name="Rate_ch4" value="-2.17103636217832" units="unit_10" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI55">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T17:16:37Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI56" id="E_f420" name="E_f420" value="-0.36" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI56">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T17:30:58Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI57" id="E_fd" name="E_fd" value="-0.398" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI57">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T17:39:31Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI58" id="E_mphen" name="E_mphen" value="-0.235963005000961" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI58">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T17:42:49Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI59" id="E_co2_formmfr" name="E_co2_formmfr" value="-0.531159819306231" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI59">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T17:44:43Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI60" id="E_menyl_mlene" name="E_menyl_mlene" value="-0.39" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI60">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T17:48:35Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI61" id="E_mlene_ch3" name="E_mlene_ch3" value="-0.32" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI61">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T17:51:28Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI62" id="E_hsfd" name="E_hsfd" value="-0.0735679564782879" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI62">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T17:53:19Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI63" id="E_ch3_ch4" name="E_ch3_ch4" value="0.00215981930623056" units="unit_5" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI63">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-10T18:26:17Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI64" id="log10_QoverK_Aha" name="log10_QoverK_Aha" value="8.5711" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI64">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-11T17:35:31Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI65" id="log10_QoverK_Ftr" name="log10_QoverK_Ftr" value="-0.7708" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI65">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-11T17:59:25Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI66" id="log10_QoverK_GerN" name="log10_QoverK_GerN" value="0" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI66">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-11T20:30:54Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI67" id="log10_QoverK_Mch" name="log10_QoverK_Mch" value="0.8059" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI67">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-11T20:33:41Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI68" id="log10_QoverK_Mtr" name="log10_QoverK_Mtr" value="-5.2032" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI68">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-11T20:41:03Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI69" id="phi_CytoR" name="phi_CytoR" value="0.19834968" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI69">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-09-06T15:55:29Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI70" id="phi_MemR" name="phi_MemR" value="0.09996907" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI70">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-09-06T15:57:26Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI71" id="f_mphen" name="f_mphen" value="0.00399" units="unit_9" constant="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI71">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-09-06T16:01:12Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI72" id="m_Fpo" name="m_Fpo" value="1.3505530781259" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI72">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-09-07T04:48:27Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI73" id="ATP_yield" name="ATP_yield" value="INF" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI73">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-09-09T01:11:49Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI74" id="m_Rnf" name="m_Rnf" value="2" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI74">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-09-09T03:13:28Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI75" id="m_Mtr" name="m_Mtr" value="2" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI75">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-10-29T05:26:49Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI76" id="m_Hdr" name="m_Hdr" value="2" units="unit_9" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI76">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2021-02-12T07:07:14Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI77" id="T_metabolites" name="T_metabolites" value="0.1688711" units="unit_1" constant="false">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI77">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2023-01-11T22:26:13Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+      </parameter>
+      <parameter id="FMD_phi_E" name="FMD_phi_E" value="0.0474351"/>
+      <parameter id="FTR_phi_E" name="FTR_phi_E" value="0.00157412"/>
+      <parameter id="MCH_phi_E" name="MCH_phi_E" value="0.00940186"/>
+      <parameter id="MCR_phi_E" name="MCR_phi_E" value="0.12"/>
+      <parameter id="Mer_phi_E" name="Mer_phi_E" value="0.0189386"/>
+      <parameter id="MTD_phi_E" name="MTD_phi_E" value="0.001"/>
+      <parameter id="Aha_phi_E" name="Aha_phi_E" value="0.00104568"/>
+      <parameter id="FPO_phi_E" name="FPO_phi_E" value="0.026818"/>
+      <parameter id="GerN_phi_E" name="GerN_phi_E" value="0.00282518"/>
+      <parameter id="HDR_phi_E" name="HDR_phi_E" value="0.0184272"/>
+      <parameter id="MTR_phi_E" name="MTR_phi_E" value="0.0289016"/>
+      <parameter id="Rnf_phi_E" name="Rnf_phi_E" value="0.00905531"/>
+      <parameter id="FPO_0H_phi_E" name="FPO_0H_phi_E" value="0.0128961"/>
+      <parameter id="Rnf_0Na_phi_E" name="Rnf_0Na_phi_E" value="0"/>
+      <parameter id="MTR_0Na_phi_E" name="MTR_0Na_phi_E" value="2.24598e-27"/>
+      <parameter id="HDR_0H_phi_E" name="HDR_0H_phi_E" value="9.57679e-52"/>
+      <parameter id="ModelValue_10" name="Initial for Co_adp" value="0.001">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="Co_adp" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_9" name="Initial for Co_atp" value="0.01">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="Co_atp" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_11" name="Initial for Co_pi" value="0.01">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="Co_pi" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_0" name="Initial for F_RTk" value="38.9214355283121">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="F_RTk" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_6" name="Initial for T_cob" value="0.00166">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="T_cob" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_5" name="Initial for T_com" value="0.00899">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="T_com" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_2" name="Initial for T_fd" value="0.00014">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="T_fd" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_7" name="Initial for T_mfr" value="0.0131">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="T_mfr" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_4" name="Initial for T_mphen" value="0.0335">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="T_mphen" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_3" name="Initial for T_mpt" value="0.019421">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="T_mpt" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_1" name="Initial for molal_V" value="48.2425">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="molal_V" type="InitialValue"/>
+        </annotation>
+      </parameter>
+      <parameter id="ModelValue_16" name="Initial for rho_protein" value="152.46">
+        <annotation>
+          <initialValue xmlns="http://copasi.org/initialValue" parent="rho_protein" type="InitialValue"/>
+        </annotation>
+      </parameter>
+    </listOfParameters>
+    <listOfInitialAssignments>
+      <initialAssignment symbol="Membrane">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci> V_mem </ci>
+              <cn> 0.001 </cn>
+            </apply>
+            <ci> V_cyto </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="f420">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_f420 </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="f420h2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_f420 </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="fdox">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_fd </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="fdred">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_fd </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="formmfr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_mfr </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="hco3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> Co_hco3 </ci>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="mfr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_mfr </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="formh4mpt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_mpt </ci>
+              <cn> 5 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="h4mpt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_mpt </ci>
+              <cn> 5 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="menylh4mpt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_mpt </ci>
+              <cn> 5 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="mleneh4mpt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_mpt </ci>
+              <cn> 5 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="mh4mpt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_mpt </ci>
+              <cn> 5 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ch4">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> Co_ch4 </ci>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="cob">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_cob </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="hsfd">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_cob </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="mcom">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_com </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="com">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_com </ci>
+              <cn> 2 </cn>
+            </apply>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="adp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> Co_adp </ci>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="atp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> Co_atp </ci>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="pi">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> Co_pi </ci>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="mphen">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> T_mphen </ci>
+                <ci> f_mphen </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <cn> 1 </cn>
+                <ci> f_mphen </ci>
+              </apply>
+            </apply>
+            <ci> Membrane </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="mphenh2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> T_mphen </ci>
+              <apply>
+                <plus/>
+                <cn> 1 </cn>
+                <ci> f_mphen </ci>
+              </apply>
+            </apply>
+            <ci> Membrane </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="hco3_env">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> Co_hco3 </ci>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ch4_env">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> Co_ch4 </ci>
+            <ci> Cytoplasm </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="F_RTk">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <apply>
+              <divide/>
+              <cn> 96485 </cn>
+              <cn> 8.3145 </cn>
+            </apply>
+            <ci> Tk </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="molal_V">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci> V_mem </ci>
+              <cn> 96485 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <cn> 0.01 </cn>
+              <cn> 4 </cn>
+              <pi/>
+              <apply>
+                <power/>
+                <ci> r_cell </ci>
+                <cn> 2 </cn>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="V_cyto">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <cn> 4 </cn>
+              <cn> 3 </cn>
+            </apply>
+            <pi/>
+            <apply>
+              <power/>
+              <ci> r_cell </ci>
+              <cn> 3 </cn>
+            </apply>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="rho_protein">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <cn> 242 </cn>
+            <cn> 0.63 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="V_mem">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <cn> 4 </cn>
+            <pi/>
+            <apply>
+              <power/>
+              <ci> r_cell </ci>
+              <cn> 2 </cn>
+            </apply>
+            <cn type="e-notation"> 5 <sep/> -9 </cn>
+            <cn> 1000 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_10">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> Co_adp </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_9">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> Co_atp </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_11">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> Co_pi </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_0">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> F_RTk </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_6">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> T_cob </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_5">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> T_com </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> T_fd </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_7">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> T_mfr </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_4">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> T_mphen </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> T_mpt </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> molal_V </ci>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="ModelValue_16">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> rho_protein </ci>
+        </math>
+      </initialAssignment>
+    </listOfInitialAssignments>
+    <listOfRules>
+      <assignmentRule variable="delta_phi">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <plus/>
+              <apply>
+                <divide/>
+                <ci> naout </ci>
+                <ci> Membrane </ci>
+              </apply>
+              <apply>
+                <divide/>
+                <ci> hout </ci>
+                <ci> Membrane </ci>
+              </apply>
+            </apply>
+            <ci> ModelValue_1 </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Growth_rate">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <ci> Aha </ci>
+              <ci> ModelValue_16 </ci>
+            </apply>
+            <cn> 24 </cn>
+            <cn> 3600 </cn>
+            <cn> 5 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="phi_Cyto">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> FMD_phi_E </ci>
+            <ci> FTR_phi_E </ci>
+            <ci> MCH_phi_E </ci>
+            <ci> MCR_phi_E </ci>
+            <ci> Mer_phi_E </ci>
+            <ci> MTD_phi_E </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="phi_Mem">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Aha_phi_E </ci>
+            <ci> FPO_phi_E </ci>
+            <ci> GerN_phi_E </ci>
+            <ci> HDR_phi_E </ci>
+            <ci> MTR_phi_E </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="E_fd">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <cn> 0.398 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <cn> 2 </cn>
+                  <ci> ModelValue_0 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <ln/>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <divide/>
+                    <ci> fdox </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> fdred </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="E_mphen">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <cn> 0.165 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <cn> 2 </cn>
+                  <ci> ModelValue_0 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <ln/>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <divide/>
+                    <ci> mphen </ci>
+                    <ci> Membrane </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> mphenh2 </ci>
+                    <ci> Membrane </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="phi_CytoN0Mcr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> FMD_phi_E </ci>
+            <ci> FTR_phi_E </ci>
+            <ci> MCH_phi_E </ci>
+            <ci> Mer_phi_E </ci>
+            <ci> MTD_phi_E </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="E_co2_formmfr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <cn> 0.472 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <cn> 2 </cn>
+                  <ci> ModelValue_0 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <ln/>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <apply>
+                      <divide/>
+                      <ci> mfr </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                    <apply>
+                      <divide/>
+                      <ci> hco3 </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> formmfr </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="E_menyl_mlene">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <cn> 0.39 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <cn> 2 </cn>
+                  <ci> ModelValue_0 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <ln/>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <divide/>
+                    <ci> menylh4mpt </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> mleneh4mpt </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="E_ch3_ch4">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <cn> 0.057 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <cn> 2 </cn>
+                  <ci> ModelValue_0 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <ln/>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <divide/>
+                    <apply>
+                      <divide/>
+                      <ci> mcom </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                    <apply>
+                      <divide/>
+                      <ci> ch4 </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> com </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="E_hsfd">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <cn> 0.143 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <cn> 2 </cn>
+                  <ci> ModelValue_0 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <ln/>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <divide/>
+                    <apply>
+                      <divide/>
+                      <ci> hsfd </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                    <apply>
+                      <divide/>
+                      <ci> cob </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> com </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="log10_QoverK_Aha">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <apply>
+                <minus/>
+                <apply>
+                  <log/>
+                  <logbase>
+                    <cn type="integer"> 10 </cn>
+                  </logbase>
+                  <ci> Co_atp </ci>
+                </apply>
+                <apply>
+                  <log/>
+                  <logbase>
+                    <cn type="integer"> 10 </cn>
+                  </logbase>
+                  <apply>
+                    <divide/>
+                    <ci> adp </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <log/>
+                <logbase>
+                  <cn type="integer"> 10 </cn>
+                </logbase>
+                <apply>
+                  <divide/>
+                  <ci> pi </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+              </apply>
+            </apply>
+            <cn> 5.5711 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Rate_ch4">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <divide/>
+              <apply>
+                <minus/>
+                <ci> MCR </ci>
+              </apply>
+              <ci> ModelValue_16 </ci>
+            </apply>
+            <cn> 24 </cn>
+            <cn> 3600 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="log10_QoverK_Ftr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <minus/>
+              <apply>
+                <minus/>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <log/>
+                    <logbase>
+                      <cn type="integer"> 10 </cn>
+                    </logbase>
+                    <apply>
+                      <divide/>
+                      <ci> mfr </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <log/>
+                    <logbase>
+                      <cn type="integer"> 10 </cn>
+                    </logbase>
+                    <apply>
+                      <divide/>
+                      <ci> formh4mpt </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                  </apply>
+                </apply>
+                <apply>
+                  <log/>
+                  <logbase>
+                    <cn type="integer"> 10 </cn>
+                  </logbase>
+                  <apply>
+                    <divide/>
+                    <ci> formmfr </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <log/>
+                <logbase>
+                  <cn type="integer"> 10 </cn>
+                </logbase>
+                <apply>
+                  <divide/>
+                  <ci> h4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+              </apply>
+            </apply>
+            <cn> 0.7708 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="log10_QoverK_Mch">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <apply>
+                <log/>
+                <logbase>
+                  <cn type="integer"> 10 </cn>
+                </logbase>
+                <apply>
+                  <divide/>
+                  <ci> formh4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+              </apply>
+              <apply>
+                <log/>
+                <logbase>
+                  <cn type="integer"> 10 </cn>
+                </logbase>
+                <apply>
+                  <divide/>
+                  <ci> menylh4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+              </apply>
+            </apply>
+            <cn> 0.8059 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="log10_QoverK_Mtr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <minus/>
+              <apply>
+                <minus/>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <log/>
+                    <logbase>
+                      <cn type="integer"> 10 </cn>
+                    </logbase>
+                    <apply>
+                      <divide/>
+                      <ci> mcom </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <log/>
+                    <logbase>
+                      <cn type="integer"> 10 </cn>
+                    </logbase>
+                    <apply>
+                      <divide/>
+                      <ci> h4mpt </ci>
+                      <ci> Cytoplasm </ci>
+                    </apply>
+                  </apply>
+                </apply>
+                <apply>
+                  <log/>
+                  <logbase>
+                    <cn type="integer"> 10 </cn>
+                  </logbase>
+                  <apply>
+                    <divide/>
+                    <ci> mh4mpt </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <log/>
+                <logbase>
+                  <cn type="integer"> 10 </cn>
+                </logbase>
+                <apply>
+                  <divide/>
+                  <ci> com </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+              </apply>
+            </apply>
+            <cn> 5.2032 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="phi_MemR">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Aha_phi_E </ci>
+            <ci> FPO_phi_E </ci>
+            <ci> GerN_phi_E </ci>
+            <ci> HDR_phi_E </ci>
+            <ci> MTR_phi_E </ci>
+            <ci> Rnf_phi_E </ci>
+            <ci> FPO_0H_phi_E </ci>
+            <ci> Rnf_0Na_phi_E </ci>
+            <ci> MTR_0Na_phi_E </ci>
+            <ci> HDR_0H_phi_E </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="m_Fpo">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> FPO_phi_E </ci>
+            </apply>
+            <apply>
+              <plus/>
+              <ci> FPO_phi_E </ci>
+              <ci> FPO_0H_phi_E </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="ATP_yield">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <ci> Aha </ci>
+            <ci> CH4t </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="E_f420">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <cn> 0.36 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <cn> 2 </cn>
+                  <ci> ModelValue_0 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <ln/>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <divide/>
+                    <ci> f420 </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> f420h2 </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="m_Rnf">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> Rnf_phi_E </ci>
+            </apply>
+            <apply>
+              <plus/>
+              <ci> Rnf_phi_E </ci>
+              <ci> Rnf_0Na_phi_E </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="E_mlene_ch3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <cn> 0.32 </cn>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <times/>
+                  <cn> 2 </cn>
+                  <ci> ModelValue_0 </ci>
+                </apply>
+              </apply>
+              <apply>
+                <ln/>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <divide/>
+                    <ci> mleneh4mpt </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> mh4mpt </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="m_Mtr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> MTR_phi_E </ci>
+            </apply>
+            <apply>
+              <plus/>
+              <ci> MTR_phi_E </ci>
+              <ci> MTR_0Na_phi_E </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="m_Hdr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> HDR_phi_E </ci>
+            </apply>
+            <apply>
+              <plus/>
+              <ci> HDR_0H_phi_E </ci>
+              <ci> HDR_phi_E </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="T_metabolites">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> ModelValue_6 </ci>
+            <ci> ModelValue_5 </ci>
+            <ci> T_f420 </ci>
+            <ci> ModelValue_2 </ci>
+            <ci> ModelValue_7 </ci>
+            <ci> ModelValue_4 </ci>
+            <ci> ModelValue_3 </ci>
+            <ci> ModelValue_10 </ci>
+            <ci> ModelValue_9 </ci>
+            <ci> ModelValue_11 </ci>
+            <apply>
+              <divide/>
+              <ci> ch4 </ci>
+              <ci> Cytoplasm </ci>
+            </apply>
+            <apply>
+              <divide/>
+              <ci> hco3 </ci>
+              <ci> Cytoplasm </ci>
+            </apply>
+            <apply>
+              <divide/>
+              <ci> hc </ci>
+              <ci> Cytoplasm </ci>
+            </apply>
+            <apply>
+              <divide/>
+              <ci> nac </ci>
+              <ci> Cytoplasm </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="log10_QoverK_GerN">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <minus/>
+              <apply>
+                <plus/>
+                <apply>
+                  <log/>
+                  <logbase>
+                    <cn type="integer"> 10 </cn>
+                  </logbase>
+                  <apply>
+                    <divide/>
+                    <ci> hout </ci>
+                    <ci> Membrane </ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <log/>
+                  <logbase>
+                    <cn type="integer"> 10 </cn>
+                  </logbase>
+                  <apply>
+                    <divide/>
+                    <ci> nac </ci>
+                    <ci> Cytoplasm </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <log/>
+                <logbase>
+                  <cn type="integer"> 10 </cn>
+                </logbase>
+                <apply>
+                  <divide/>
+                  <ci> naout </ci>
+                  <ci> Membrane </ci>
+                </apply>
+              </apply>
+            </apply>
+            <apply>
+              <log/>
+              <logbase>
+                <cn type="integer"> 10 </cn>
+              </logbase>
+              <apply>
+                <divide/>
+                <ci> hc </ci>
+                <ci> Cytoplasm </ci>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="phi_CytoR">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> FMD_phi_E </ci>
+            <ci> FTR_phi_E </ci>
+            <ci> MCH_phi_E </ci>
+            <ci> MCR_phi_E </ci>
+            <ci> Mer_phi_E </ci>
+            <ci> MTD_phi_E </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+    </listOfRules>
+    <listOfReactions>
+      <reaction metaid="COPASI78" id="FMD" name="FMD" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI78">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:24:47Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="fdox" stoichiometry="1"/>
+          <speciesReference species="formmfr" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="hco3" stoichiometry="1"/>
+          <speciesReference species="fdred" stoichiometry="1"/>
+          <speciesReference species="mfr" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Fmd </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> FMD_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> fdox </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> formmfr </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K2 </ci>
+                <ci> F_RTk </ci>
+                <ci> E_fd </ci>
+                <ci> E_co2_formmfr </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.0029167"/>
+            <parameter id="K1" name="K1" value="2e-05"/>
+            <parameter id="K2" name="K2" value="1e-05"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI79" id="FTR" name="FTR" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI79">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:28:34Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="formmfr" stoichiometry="1"/>
+          <speciesReference species="h4mpt" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="formh4mpt" stoichiometry="1"/>
+          <speciesReference species="mfr" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Ftr </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> FTR_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> formmfr </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> h4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K2 </ci>
+                <ci> log10_QoverK_Ftr </ci>
+                <ci> chi </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.061667"/>
+            <parameter id="K1" name="K1" value="6e-05"/>
+            <parameter id="K2" name="K2" value="0.0004"/>
+            <parameter id="chi" name="chi" value="1"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI80" id="MCH" name="MCH" reversible="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>MESPT + H2O = FSPT + H+
+MESPT, menylh4mpt, CHSPT
+
+KMCH = -0.8059, Km,MESPT = 0.57 mM</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI80">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:30:12Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="menylh4mpt" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="formh4mpt" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Mch </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> MCH_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> menylh4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <ci> log10_QoverK_Mch </ci>
+                <ci> chi </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.14058"/>
+            <parameter id="K1" name="K1" value="0.00057"/>
+            <parameter id="chi" name="chi" value="1"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI81" id="MTD" name="MTD" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI81">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:33:25Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="mleneh4mpt" stoichiometry="1"/>
+          <speciesReference species="f420" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="menylh4mpt" stoichiometry="1"/>
+          <speciesReference species="f420h2" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Mtd </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> MTD_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> mleneh4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> f420 </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K2 </ci>
+                <ci> F_RTk </ci>
+                <ci> E_f420 </ci>
+                <ci> E_menyl_mlene </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.066667"/>
+            <parameter id="K1" name="K1" value="6e-06"/>
+            <parameter id="K2" name="K2" value="2.5e-05"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI82" id="Mer" name="Mer" reversible="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>MSPT + F420 + H+ = MLSPT + F420H2
+MSPT, CH3H4SPT
+
+KMER = -1.3523, Km,MSPT = 0.25 mM, Km,MLSPT = 0.015 mM, Km,F420 = 0.04 mM, Km,F420H2 = 0.012 mM</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI82">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:35:11Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="f420" stoichiometry="1"/>
+          <speciesReference species="mh4mpt" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mleneh4mpt" stoichiometry="1"/>
+          <speciesReference species="f420h2" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Mer </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> Mer_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> f420 </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> KS1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> mleneh4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> KP1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> mh4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> KS2 </ci>
+                <apply>
+                  <divide/>
+                  <ci> f420h2 </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> KP2 </ci>
+                <ci> F_RTk </ci>
+                <ci> E_f420 </ci>
+                <ci> E_mlene_ch3 </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.0033333"/>
+            <parameter id="KS1" name="KS1" value="4e-05"/>
+            <parameter id="KP1" name="KP1" value="1.2e-05"/>
+            <parameter id="KS2" name="KS2" value="0.00025"/>
+            <parameter id="KP2" name="KP2" value="1.5e-05"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI83" id="MCR" name="MCR" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI83">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T13:40:33Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="cob" stoichiometry="1"/>
+          <speciesReference species="mcom" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="ch4" stoichiometry="1"/>
+          <speciesReference species="hsfd" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Mcr </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> MCR_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> cob </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> mcom </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K2 </ci>
+                <ci> F_RTk </ci>
+                <ci> E_ch3_ch4 </ci>
+                <ci> E_hsfd </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.0005"/>
+            <parameter id="K1" name="K1" value="5.9e-05"/>
+            <parameter id="K2" name="K2" value="0.005"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI84" id="FPO" name="FPO" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI84">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:43:46Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="f420h2" stoichiometry="1"/>
+          <speciesReference species="mphen" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="f420" stoichiometry="1"/>
+          <speciesReference species="mphenh2" stoichiometry="1"/>
+          <speciesReference species="hout" stoichiometry="2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <ci> V_redox </ci>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> FPO_phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> f420h2 </ci>
+                <ci> Cytoplasm </ci>
+              </apply>
+              <ci> K1 </ci>
+              <apply>
+                <divide/>
+                <ci> mphen </ci>
+                <ci> Membrane </ci>
+              </apply>
+              <ci> K2 </ci>
+              <ci> F_RTk </ci>
+              <ci> n </ci>
+              <ci> E_mphen </ci>
+              <ci> E_f420 </ci>
+              <ci> m_Fpo </ci>
+              <ci> delta_phi </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.00018833"/>
+            <parameter id="K1" name="K1" value="7e-06"/>
+            <parameter id="K2" name="K2" value="3.5e-05"/>
+            <parameter id="n" name="n" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI85" id="MTR" name="MTR" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI85">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:46:12Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="mh4mpt" stoichiometry="1"/>
+          <speciesReference species="com" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="h4mpt" stoichiometry="1"/>
+          <speciesReference species="mcom" stoichiometry="1"/>
+          <speciesReference species="naout" stoichiometry="2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Mtr </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> MTR_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> mh4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> com </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K2 </ci>
+                <ci> log10_QoverK_Mtr </ci>
+                <ci> F_RTk </ci>
+                <ci> delta_phi </ci>
+                <ci> m_Mtr </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.00017333"/>
+            <parameter id="K1" name="K1" value="5e-05"/>
+            <parameter id="K2" name="K2" value="0.00025"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI86" id="Aha" name="Aha" reversible="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>Biomass reaction is added to acccount for the production of reduced cofactors and metabolite precursor
+
+The stoichiometry of the biomass reaction is estimated from the FBA results:
+fdred/atp = 0.1799
+f420h2/atp = 0.0829
+acoa/atp = 0.1018</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI86">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:48:31Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="adp" stoichiometry="1"/>
+          <speciesReference species="pi" stoichiometry="1"/>
+          <speciesReference species="hout" stoichiometry="3"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="atp" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Aha </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> Aha_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> adp </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> pi </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <ci> K2 </ci>
+                <ci> chi </ci>
+                <ci> delta_phi </ci>
+                <ci> log10_QoverK_Aha </ci>
+                <ci> F_RTk </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.000215"/>
+            <parameter id="K1" name="K1" value="0.0001"/>
+            <parameter id="K2" name="K2" value="0.0042"/>
+            <parameter id="chi" name="chi" value="3"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI87" id="GerN" name="GerN" reversible="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>KM(Na+) = 5 mM</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI87">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-29T16:35:23Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="naout" stoichiometry="1"/>
+          <speciesReference species="hc" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="hout" stoichiometry="1"/>
+          <speciesReference species="nac" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_GerN </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> GerN_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> naout </ci>
+                  <ci> Membrane </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> hout </ci>
+                  <ci> Membrane </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> nac </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> hc </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.0024"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI88" id="HDR" name="HDR" reversible="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>KHDR = 0.7438, Km,HSfd = 0.144 mM, Km,MPH2 = 0.092 mM</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI88">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-12-02T17:31:17Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="hsfd" stoichiometry="1"/>
+          <speciesReference species="mphenh2" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="cob" stoichiometry="1"/>
+          <speciesReference species="com" stoichiometry="1"/>
+          <speciesReference species="mphen" stoichiometry="1"/>
+          <speciesReference species="hout" stoichiometry="2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_redox </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> HDR_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> hsfd </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> mphenh2 </ci>
+                  <ci> Membrane </ci>
+                </apply>
+                <ci> K2 </ci>
+                <ci> F_RTk </ci>
+                <ci> n </ci>
+                <ci> E_hsfd </ci>
+                <ci> E_mphen </ci>
+                <ci> m_Hdr </ci>
+                <ci> delta_phi </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.002315"/>
+            <parameter id="K1" name="K1" value="0.000144"/>
+            <parameter id="K2" name="K2" value="9.2e-05"/>
+            <parameter id="n" name="n" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI89" id="CO2t" name="CO2t" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI89">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T15:26:27Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="hco3_env" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="hco3" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> J_diff </ci>
+                <ci> Diff </ci>
+                <ci> r_cell </ci>
+                <ci> V_cyto </ci>
+                <apply>
+                  <divide/>
+                  <ci> hco3_env </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> hco3 </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="Diff" name="Diff" value="1.92e-09"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI90" id="CH4t" name="CH4t" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI90">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-03-09T15:31:33Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="ch4_env" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="ch4" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> J_diff </ci>
+                <ci> Diff </ci>
+                <ci> r_cell </ci>
+                <ci> V_cyto </ci>
+                <apply>
+                  <divide/>
+                  <ci> ch4_env </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> ch4 </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="Diff" name="Diff" value="1.49e-09"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI91" id="Rnf" name="Rnf" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI91">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-09-06T15:48:49Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="fdred" stoichiometry="1"/>
+          <speciesReference species="mphen" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="fdox" stoichiometry="1"/>
+          <speciesReference species="mphenh2" stoichiometry="1"/>
+          <speciesReference species="naout" stoichiometry="2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <ci> V_redox </ci>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> Rnf_phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> fdred </ci>
+                <ci> Cytoplasm </ci>
+              </apply>
+              <ci> K1 </ci>
+              <apply>
+                <divide/>
+                <ci> mphen </ci>
+                <ci> Membrane </ci>
+              </apply>
+              <ci> K2 </ci>
+              <ci> F_RTk </ci>
+              <ci> n </ci>
+              <ci> E_mphen </ci>
+              <ci> E_fd </ci>
+              <ci> m_Rnf </ci>
+              <ci> delta_phi </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.00661667"/>
+            <parameter id="K1" name="K1" value="5.3e-09"/>
+            <parameter id="K2" name="K2" value="3.5e-05"/>
+            <parameter id="n" name="n" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI92" id="FPO_0H" name="FPO_0H" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI92">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:43:46Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="f420h2" stoichiometry="1"/>
+          <speciesReference species="mphen" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="f420" stoichiometry="1"/>
+          <speciesReference species="mphenh2" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <ci> V_redox </ci>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> FPO_0H_phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> f420h2 </ci>
+                <ci> Cytoplasm </ci>
+              </apply>
+              <ci> K1 </ci>
+              <apply>
+                <divide/>
+                <ci> mphen </ci>
+                <ci> Membrane </ci>
+              </apply>
+              <ci> K2 </ci>
+              <ci> F_RTk </ci>
+              <ci> n </ci>
+              <ci> E_mphen </ci>
+              <ci> E_f420 </ci>
+              <ci> m_Fpo </ci>
+              <ci> delta_phi </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.00018833"/>
+            <parameter id="K1" name="K1" value="7e-06"/>
+            <parameter id="K2" name="K2" value="3.5e-05"/>
+            <parameter id="n" name="n" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI93" id="Rnf_0Na" name="Rnf_0Na" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI93">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2020-09-06T15:48:49Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="fdred" stoichiometry="1"/>
+          <speciesReference species="mphen" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="fdox" stoichiometry="1"/>
+          <speciesReference species="mphenh2" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <ci> V_redox </ci>
+              <ci> rho_protein </ci>
+              <ci> k </ci>
+              <ci> Rnf_0Na_phi_E </ci>
+              <apply>
+                <divide/>
+                <ci> fdred </ci>
+                <ci> Cytoplasm </ci>
+              </apply>
+              <ci> K1 </ci>
+              <apply>
+                <divide/>
+                <ci> mphen </ci>
+                <ci> Membrane </ci>
+              </apply>
+              <ci> K2 </ci>
+              <ci> F_RTk </ci>
+              <ci> n </ci>
+              <ci> E_mphen </ci>
+              <ci> E_fd </ci>
+              <ci> m_Rnf </ci>
+              <ci> delta_phi </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.00661667"/>
+            <parameter id="K1" name="K1" value="5.3e-09"/>
+            <parameter id="K2" name="K2" value="3.5e-05"/>
+            <parameter id="n" name="n" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI94" id="MTR_0Na" name="MTR_0Na" reversible="true">
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI94">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-10-26T15:46:12Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="mh4mpt" stoichiometry="1"/>
+          <speciesReference species="com" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="h4mpt" stoichiometry="1"/>
+          <speciesReference species="mcom" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_Mtr </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> MTR_0Na_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> mh4mpt </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> com </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K2 </ci>
+                <ci> log10_QoverK_Mtr </ci>
+                <ci> F_RTk </ci>
+                <ci> delta_phi </ci>
+                <ci> m_Mtr </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.00017333"/>
+            <parameter id="K1" name="K1" value="5e-05"/>
+            <parameter id="K2" name="K2" value="0.00025"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI95" id="HDR_0H" name="HDR_0H" reversible="true">
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+            <pre>KHDR = 0.7438, Km,HSfd = 0.144 mM, Km,MPH2 = 0.092 mM</pre>
+          </body>
+        </notes>
+        <annotation>
+          <copasi:COPASI xmlns:copasi="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI95">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2015-12-02T17:31:17Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </copasi:COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="hsfd" stoichiometry="1"/>
+          <speciesReference species="mphenh2" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="cob" stoichiometry="1"/>
+          <speciesReference species="com" stoichiometry="1"/>
+          <speciesReference species="mphen" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cytoplasm </ci>
+              <apply>
+                <ci> V_redox </ci>
+                <ci> rho_protein </ci>
+                <ci> k </ci>
+                <ci> HDR_0H_phi_E </ci>
+                <apply>
+                  <divide/>
+                  <ci> hsfd </ci>
+                  <ci> Cytoplasm </ci>
+                </apply>
+                <ci> K1 </ci>
+                <apply>
+                  <divide/>
+                  <ci> mphenh2 </ci>
+                  <ci> Membrane </ci>
+                </apply>
+                <ci> K2 </ci>
+                <ci> F_RTk </ci>
+                <ci> n </ci>
+                <ci> E_hsfd </ci>
+                <ci> E_mphen </ci>
+                <ci> m_Hdr </ci>
+                <ci> delta_phi </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k" name="k" value="0.002315"/>
+            <parameter id="K1" name="K1" value="0.000144"/>
+            <parameter id="K2" name="K2" value="9.2e-05"/>
+            <parameter id="n" name="n" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
